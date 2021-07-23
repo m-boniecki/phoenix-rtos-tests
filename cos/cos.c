@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include <stdlib.h>
+//#include <stdlib.h>
 #include <float.h>
 #include <math.h>
 #include "unity.h"
@@ -12,6 +12,26 @@
 #define DX		0.001
 
 #define RAND_NUM_SEED 10344 // some value ... can be passed as a parameter in future
+
+//-------- section for random number generator which will be implemented locally (there is no drand48() in all architectures)
+const unsigned long long m = 1LL<<48; //m is acutally 2**48
+const unsigned long long a = 0x5DEECE66DLL; // in decimal is 25214903917LL;
+const unsigned long long c = 0xB; // in decimal is 11;
+
+const unsigned long long low_16bits_init = 0x330E;
+
+unsigned long long curr_seed;
+
+//------- functions ---
+void srand48(unsigned long long init_seed){
+    curr_seed = low_16bits_init + (init_seed<<16);
+}
+
+double drand48(){
+    curr_seed = (a*curr_seed + c) % m;
+    return ((double)curr_seed)/((double)m);
+}
+//-------- section ends -------------------------
 
 //#define VERBOSE
 
