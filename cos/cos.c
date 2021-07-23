@@ -1,3 +1,5 @@
+//author: Michal Boniecki, 2021.07.22
+
 #include <stdio.h>
 //#include <stdlib.h>
 #include <float.h>
@@ -5,11 +7,11 @@
 #include "unity.h"
 #include "unity_fixture.h"
 
-#define N_RAND_CHECKS 		1000
-#define N_PERIODS_TO_CHECK	1000
+#define N_RAND_CHECKS 		1000 //number of random checks
+#define N_PERIODS_TO_CHECK	1000 //range of cos testing for some tests
 
-#define TOLERANCE	0.000001
-#define DX		0.001
+#define TOLERANCE	0.000001 //tolerance for tests on second derivative and zeros_and_min_max
+#define DX		0.001    //dx used in calculation of the second derivative
 
 #define RAND_NUM_SEED 10344 // some value ... can be passed as a parameter in future
 
@@ -20,7 +22,7 @@ const unsigned long long c = 0xB; // in decimal is 11;
 
 const unsigned long long low_16bits_init = 0x330E;
 
-unsigned long long curr_seed;
+unsigned long long curr_seed; //global variable used by the random number generator - a current state of random generator
 
 //------- functions ---
 void srand48(unsigned long long init_seed){
@@ -154,7 +156,7 @@ TEST(test_cos, zeros_and_min_max_values_in_N_periods){
 	val_arg  = 2*M_PI*(double)i + 3*M_PI/2;
 	val_cos  = cos( val_arg ); //val_expected is: 0.0
 	if( val_cos < 0.0-TOLERANCE || val_cos > 0.0+TOLERANCE ){
-	    sprintf(str_error_msg, "error: cos(%lf) is: %lf, expected value is: 0.0 ---> val_arg: %lf should correspond to 2*PI*%d + PI/2", val_arg, val_cos, val_arg, i);
+	    sprintf(str_error_msg, "error: cos(%lf) is: %lf, expected value is: 0.0 ---> val_arg: %lf should correspond to 2*PI*%d + 3*PI/2", val_arg, val_cos, val_arg, i);
 	    FAIL(str_error_msg);
 	}
     }
@@ -193,7 +195,7 @@ TEST(test_cos, second_derivative__in_N_periods_random){
 TEST_GROUP_RUNNER(test_cos)
 {
 // there is some redundancy in the tests
-// if a funtion is non-zero (in proper range), and is symmetric: cos(-x)==cos(x), and the second derivative is -cos(x): (d2f/dx)(cos(x)) == -cos(x)
+// if a funtion is non-zero (in proper range: -1, 0 ,1), and is symmetric: cos(-x)==cos(x), and the second derivative is -cos(x): (d2f/dx)(cos(x)) == -cos(x)
 // in such case the function must be cos(x), no other option - no other function complying those conditions
 
 	RUN_TEST_CASE(test_cos, symmetry__arg_random_in_the_first_N_periods);
